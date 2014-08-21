@@ -35,6 +35,6 @@ Now just follow the README at: https://github.com/intridea/omniauth
 
 If you would like to use this plugin against a wiki you should pass this you can use the environment variable WIKI_AUTH_SITE to set the server to connect to. Alternatively you can pass the site as a client_option to the omniauth config:
 
-    config.omniauth :osm, "consumer_key", "consumer_secret",  :client_options => {:site => 'http://commons.wikimedia.org' }
+    config.omniauth :mediawiki, "consumer_key", "consumer_secret",  :client_options => {:site => 'http://commons.wikimedia.org' }
 
-if no site is specified the mediawiki.org wiki will be used.
+if no site is specified the www.mediawiki.org wiki will be used.

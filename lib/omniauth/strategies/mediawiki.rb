@@ -1,5 +1,6 @@
 require 'omniauth-oauth'
 require 'rexml/document'
+require 'jwt'
 
 module OmniAuth
   module Strategies
@@ -22,7 +23,7 @@ module OmniAuth
         :request_token_path => '/w/index.php?title=Special:OAuth/initiate',
         :oauth_callback=> "oob"
       }
-      
+
       def request_phase
         request_token = consumer.get_request_token(:oauth_callback => callback_url)
         session['oauth'] ||= {}
@@ -31,18 +32,18 @@ module OmniAuth
 
         if request_token.callback_confirmed?
           r.redirect(request_token.authorize_url(
-            :oauth_consumer_key => consumer.key
+                       :oauth_consumer_key => consumer.key
           ))
         else
           r.redirect(request_token.authorize_url(
-            :oauth_callback => callback_url,
-            :oauth_consumer_key => consumer.key
+                       :oauth_callback => callback_url,
+                       :oauth_consumer_key => consumer.key
           ))
         end
 
         r.finish
       end
-      
+
       def callback_url
         'oob'
       end
@@ -52,12 +53,12 @@ module OmniAuth
       # additional calls (if the user id is returned with the token
       # or as a URI parameter). This may not be possible with all
       # providers.
-      uid{ request.params['user_id'] }
+      uid{ raw_info["sub"] }
 
       info do
         {
-          :name => "asc",
-          :location => "sc"
+          :name => raw_info["username"],
+          :urls => {"server": raw_info["iss"]}
         }
       end
 
@@ -67,12 +68,20 @@ module OmniAuth
         }
       end
 
+
       def raw_info
-      puts "raw info"
-      puts access_token.get('/w/index.php?title=Special:OAuth/identify')
-        @raw_info = MultiJson.decode(access_token.get('/w/index.php?title=Special:OAuth/identify')).body
-        puts @raw_info.inspect
-        @raw_info #||= MultiJson.decode(access_token.get('/me.json')).body
+        @raw_info ||= parse_info(access_token.get('/w/index.php?title=Special:OAuth/identify'))
+
+        @raw_info
+      end
+      
+      private
+      
+      def parse_info(jwt_data)
+        ident = jwt_data.body
+        payload, header = JWT.decode(ident, consumer.secret)
+        
+        payload
       end
 
     end
