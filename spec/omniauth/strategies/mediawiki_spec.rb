@@ -11,19 +11,19 @@ describe OmniAuth::Strategies::Mediawiki do
     end
 
     it 'should have correct site' do
-      expect(subject.options.client_options.site).to eq('https://commons.mediawiki.org')
+      expect(subject.options.client_options.site).to eq('https://www.mediawiki.org')
     end
 
     it 'should have correct authorize url' do
-      expect(subject.options.client_options.authorize_path).to eq('/wiki/Special:OAuth/token')
+      expect(subject.options.client_options.authorize_path).to eq('/wiki/Special:Oauth/authorize')
     end
 
     it 'should have correct access token url' do
-      expect(subject.options.client_options.access_token_path).to eq('/wiki/Special:OAuth/token')
+      expect(subject.options.client_options.access_token_path).to eq('/w/index.php?title=Special:OAuth/token')
     end
 
     it 'should have correct request token url' do
-      expect(subject.options.client_options.request_token_path).to eq('/wiki/Special:OAuth/initiate')
+      expect(subject.options.client_options.request_token_path).to eq('/w/index.php?title=Special:OAuth/initiate')
     end
   end
 end
