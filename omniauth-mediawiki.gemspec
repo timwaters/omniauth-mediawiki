@@ -1,18 +1,18 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "omniauth-osm/version"
+require "omniauth-mediawiki/version"
 
 Gem::Specification.new do |gem|
-  gem.name        = 'omniauth-osm'
-  gem.version     = OmniAuth::Osm::VERSION
-  gem.authors     = ["Christoph Bünte"]
-  gem.email       = 'christoph@sozialhelden.de'
-  gem.homepage    = 'https://github.com/sozialhelden/omniauth-osm'
-  gem.description = %q{OpenStreetMap strategy for OmniAuth 1.0a}
-  gem.summary     = %q{OpenStreetMap strategy for OmniAuth 1.0a}
+  gem.name        = 'omniauth-mediawiki'
+  gem.version     = OmniAuth::Mediawiki::VERSION
+  gem.authors     = ["Tim Waters"]
+  gem.email       = 'tim@geothings.net'
+  gem.homepage    = 'https://github.com/timwaters/omniauth-mediawiki'
+  gem.description = %q{Mediawiki strategy for OmniAuth 1.0a}
+  gem.summary     = %q{Mediawiki strategy for OmniAuth 1.0a}
   gem.license     = 'MIT'
 
-  gem.rubyforge_project = "omniauth-osm"
+  gem.rubyforge_project = "omniauth-mediawiki"
 
   gem.files       = `git ls-files`.split("\n")
   gem.test_files  = `git ls-files -- {test,spec,features}/*`.split("\n")
@@ -26,4 +26,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'simplecov', '~> 0.5'
   gem.add_development_dependency 'webmock', '~> 1.7'
   gem.add_development_dependency 'coveralls'
+  gem.add_development_dependency 'rack-test'
+  gem.add_development_dependency 'sinatra'
 end
