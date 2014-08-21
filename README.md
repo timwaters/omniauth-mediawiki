@@ -25,11 +25,29 @@ Once these are in, you need to add the following to your `config/initializers/om
 
 If you are using devise, this is how it looks like in your `config/initializers/devise.rb`:
 
-    config.omniauth :mediawiki, "consumer_key", "consumer_secret", :client_options => {:site => 'http://commons.wikimedia.org' }
+    config.omniauth :mediawiki, "consumer_key", "consumer_secret", {:client_options => {:site => 'http://commons.wikimedia.org' }}
 
 You will obviously have to put in your key and secret, which you get when you register your app on your particula Wiki.
 
 Now just follow the README at: https://github.com/intridea/omniauth
+
+## Info about the Medaiwiki OAuth extension
+
+In general see the pages around https://www.mediawiki.org/wiki/OAuth/For_Developers for more information
+
+When registering for a new OAuth consumer registration you need to specify the callback url properly. e.g. for development:
+
+    http://localhost:3000/u/auth/mediawiki/callback 
+    http://localhost:3000/users/auth/mediawiki/callback
+    
+Internally the strategy has to use  `/w/index.php?title=`  paths like so:
+
+    :authorize_path => '/wiki/Special:Oauth/authorize',
+    :access_token_path => '/w/index.php?title=Special:OAuth/token',
+    :request_token_path => '/w/index.php?title=Special:OAuth/initiate',
+    
+This is a workaround as the paths should all be like the authorize path.
+
 
 ## Specifying Target Wiki
 
