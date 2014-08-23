@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.authors     = ["Tim Waters"]
   gem.email       = 'tim@geothings.net'
   gem.homepage    = 'https://github.com/timwaters/omniauth-mediawiki'
-  gem.description = %q{Mediawiki strategy for OmniAuth 1.0a}
-  gem.summary     = %q{Mediawiki strategy for OmniAuth 1.0a}
+  gem.description = %q{Mediawiki OAuth strategy for OmniAuth 1.0a }
+  gem.summary     = %q{Mediawiki strategy for OmniAuth 1.0a for wikipedia.org, commons.wikimedia.org etc where the wiki has the OAuth extension installed}
   gem.license     = 'MIT'
 
   gem.rubyforge_project = "omniauth-mediawiki"
