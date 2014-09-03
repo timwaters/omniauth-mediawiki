@@ -25,7 +25,8 @@ Once these are in, you need to add the following to your `config/initializers/om
 
 If you are using devise, this is how it looks like in your `config/initializers/devise.rb`:
 
-    config.omniauth :mediawiki, "consumer_key", "consumer_secret", {:client_options => {:site => 'http://commons.wikimedia.org' }}
+    config.omniauth :mediawiki, "consumer_key", "consumer_secret", 
+                    {:client_options => {:site => 'http://commons.wikimedia.org' }}
 
 You will obviously have to put in your key and secret, which you get when you register your app on your particula Wiki.
 
@@ -48,12 +49,14 @@ Internally the strategy has to use  `/w/index.php?title=`  paths like so:
     
 This is a workaround as the paths should all be like the authorize path.
 
+Note also that new proposed registrations on mediawiki.org will work with your mediawki user that you registered the application with but have to be approved by an admin user for them to be useable by other users. 
 
 ## Specifying Target Wiki
 
 If you would like to use this plugin against a wiki you should pass this you can use the environment variable WIKI_AUTH_SITE to set the server to connect to. Alternatively you can pass the site as a client_option to the omniauth config:
 
-    config.omniauth :mediawiki, "consumer_key", "consumer_secret",  :client_options => {:site => 'http://commons.wikimedia.org' }
+    config.omniauth :mediawiki, "consumer_key", "consumer_secret",  
+                    :client_options => {:site => 'http://commons.wikimedia.org' }
 
 if no site is specified the www.mediawiki.org wiki will be used.
 
@@ -63,9 +66,12 @@ Within a Devise / Omniauth setup, in the callback method, you can directly get a
 
 Assuming these are stored in the user model, the following could be used to query the mediawiki API at a later date. In this example we are using the Wikimedia Commons API https://www.mediawiki.org/wiki/API:Main_page
 
-    @consumer = OAuth::Consumer.new "consumer_key",  "consumer_secret",  {:site=>APP_CONFIG["omniauth_mediawiki_site"]}
+    @consumer = OAuth::Consumer.new "consumer_key",  "consumer_secret",  
+                        {:site=>APP_CONFIG["omniauth_mediawiki_site"]}
     @access_token = OAuth::AccessToken.new(@consumer, user.auth_token, user.auth_secret) 
     uri = 'https://commons.wikimedia.org/w/api.php?action=query&meta=userinfo&uiprop=rights|editcount&format=json'
     resp = @access_token.get(URI.encode(uri))
     logger.debug resp.body.inspect
-    #"{\"query\":{\"userinfo\":{\"id\":12345,\"name\":\"WikiUser\",\"rights\":[\"read\",\"writeapi\",\"purge\",\"autoconfirmed\",\"editsemiprotected\",\"skipcaptcha\"],\"editcount\":2323}}}"
+    # {"query":{"userinfo":{"id":12345,"name":"WikiUser",
+    # "rights":["read","writeapi","purge","autoconfirmed","editsemiprotected","skipcaptcha"],
+    # "editcount":2323}}}
