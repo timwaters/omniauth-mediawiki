@@ -67,7 +67,7 @@ Within a Devise / Omniauth setup, in the callback method, you can directly get a
 Assuming these are stored in the user model, the following could be used to query the mediawiki API at a later date. In this example we are using the Wikimedia Commons API https://www.mediawiki.org/wiki/API:Main_page
 
     @consumer = OAuth::Consumer.new "consumer_key",  "consumer_secret",  
-                        {:site=>APP_CONFIG["omniauth_mediawiki_site"]}
+                        {:site=>"https://commons.wikimedia.org"}
     @access_token = OAuth::AccessToken.new(@consumer, user.auth_token, user.auth_secret) 
     uri = 'https://commons.wikimedia.org/w/api.php?action=query&meta=userinfo&uiprop=rights|editcount&format=json'
     resp = @access_token.get(URI.encode(uri))
