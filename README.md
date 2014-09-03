@@ -56,3 +56,16 @@ If you would like to use this plugin against a wiki you should pass this you can
     config.omniauth :mediawiki, "consumer_key", "consumer_secret",  :client_options => {:site => 'http://commons.wikimedia.org' }
 
 if no site is specified the www.mediawiki.org wiki will be used.
+
+## How to call the MediaWiki API via Omniauth
+
+Within a Devise / Omniauth setup, in the callback method, you can directly get an OAuth::AccessToken  via ```request.env["omniauth.auth"]["extra"]["access_token"]``` or you can get the token and secret from ```request.env["omniauth.auth"]["credentials"]["token"]``` and ```request.env["omniauth.auth"]["credentials"]["secret"]```
+
+Assuming these are stored in the user model, the following could be used to query the mediawiki API at a later date. In this example we are using the Wikimedia Commons API https://www.mediawiki.org/wiki/API:Main_page
+
+    @consumer = OAuth::Consumer.new "consumer_key",  "consumer_secret",  {:site=>APP_CONFIG["omniauth_mediawiki_site"]}
+    @access_token = OAuth::AccessToken.new(@consumer, user.auth_token, user.auth_secret) 
+    uri = 'https://commons.wikimedia.org/w/api.php?action=query&meta=userinfo&uiprop=rights|editcount&format=json'
+    resp = @access_token.get(URI.encode(uri))
+    logger.debug resp.body.inspect
+    #"{\"query\":{\"userinfo\":{\"id\":12345,\"name\":\"WikiUser\",\"rights\":[\"read\",\"writeapi\",\"purge\",\"autoconfirmed\",\"editsemiprotected\",\"skipcaptcha\"],\"editcount\":2323}}}"
