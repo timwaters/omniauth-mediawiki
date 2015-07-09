@@ -26,13 +26,13 @@ Once these are in, you need to add the following to your `config/initializers/om
 If you are using devise, this is how it looks like in your `config/initializers/devise.rb`:
 
     config.omniauth :mediawiki, "consumer_key", "consumer_secret", 
-                    {:client_options => {:site => 'http://commons.wikimedia.org' }}
+                    {:client_options => {:site => 'https://commons.wikimedia.org' }}
 
 You will obviously have to put in your key and secret, which you get when you register your app on your particula Wiki.
 
 Now just follow the README at: https://github.com/intridea/omniauth
 
-## Info about the Medaiwiki OAuth extension
+## Info about the MediaWiki OAuth extension
 
 In general see the pages around https://www.mediawiki.org/wiki/OAuth/For_Developers for more information
 
@@ -56,7 +56,7 @@ Note also that new proposed registrations on mediawiki.org will work with your m
 If you would like to use this plugin against a wiki you should pass this you can use the environment variable WIKI_AUTH_SITE to set the server to connect to. Alternatively you can pass the site as a client_option to the omniauth config:
 
     config.omniauth :mediawiki, "consumer_key", "consumer_secret",  
-                    :client_options => {:site => 'http://commons.wikimedia.org' }
+                    :client_options => {:site => 'https://commons.wikimedia.org' }
 
 if no site is specified the www.mediawiki.org wiki will be used.
 
