@@ -28,11 +28,14 @@ module OmniAuth
       def request_phase
         request_token = consumer.get_request_token(:oauth_callback => callback_url)
         session['oauth'] ||= {}
-        session['oauth'][name.to_s] = {'callback_confirmed' => request_token.callback_confirmed?, 'request_token' => request_token.token, 'request_secret' => request_token.secret}
+        session['oauth']['mediawiki'] = {
+          'callback_confirmed' => request_token.callback_confirmed?,
+          'request_token' => request_token.token,
+          'request_secret' => request_token.secret}
         r = Rack::Response.new
 
         if request_token.callback_confirmed?
-          r.redirect(request_token.authorize_url(authorize_url_parameters))
+          r.redirect(authorize_url(request_token))
         else
           r.redirect(request_token.authorize_url(
                        :oauth_callback => callback_url,
@@ -74,6 +77,20 @@ module OmniAuth
       end
 
       private
+
+      def authorize_url(request_token)
+        params = authorize_url_parameters
+        url = request_token.authorize_url(params)
+
+        # All parameters that get passed through the returntoquery parameter
+        # must be url-encoded, or they will be lost when mediawiki redirects.
+        # The oauth_token query that gets appended to the url by omniauth
+        # must thus be adjusted to pass through returntoquery.
+        if params.include?(:returntoquery)
+          url.gsub!('&oauth_token=', '%26oauth_token%3D')
+        end
+        url
+      end
 
       def authorize_url_parameters
         params = { :title => consumer.options[:authorize_path_title] }
