@@ -5,41 +5,40 @@ require 'jwt'
 module OmniAuth
   module Strategies
     class Mediawiki < OmniAuth::Strategies::OAuth
-      option :name, "mediawiki"
+      option :name, 'mediawiki'
 
       def self.site
         if ENV['WIKI_AUTH_SITE']
           ENV['WIKI_AUTH_SITE']
         else
-          "https://www.mediawiki.org"
+          'https://www.mediawiki.org'
         end
       end
 
-      option :client_options, {
-        :site => site,
-        :signup => false,
-        :authorize_path => '/w/index.php',
-        :authorize_path_title => 'Special:OAuth/authorize',
-        :access_token_path => '/w/index.php?title=Special:OAuth/token',
-        :request_token_path => '/w/index.php?title=Special:OAuth/initiate',
-        :oauth_callback=> "oob"
-      }
+      option :client_options,
+             site: site,
+             signup: false,
+             authorize_path: '/w/index.php',
+             authorize_path_title: 'Special:OAuth/authorize',
+             access_token_path: '/w/index.php?title=Special:OAuth/token',
+             request_token_path: '/w/index.php?title=Special:OAuth/initiate',
+             oauth_callback: 'oob'
 
       def request_phase
-        request_token = consumer.get_request_token(:oauth_callback => callback_url)
+        request_token = consumer.get_request_token(oauth_callback: callback_url)
         session['oauth'] ||= {}
         session['oauth']['mediawiki'] = {
           'callback_confirmed' => request_token.callback_confirmed?,
           'request_token' => request_token.token,
-          'request_secret' => request_token.secret}
+          'request_secret' => request_token.secret }
         r = Rack::Response.new
 
         if request_token.callback_confirmed?
           r.redirect(authorize_url(request_token))
         else
           r.redirect(request_token.authorize_url(
-                       :oauth_callback => callback_url,
-                       :oauth_consumer_key => consumer.key
+                       oauth_callback: callback_url,
+                       oauth_consumer_key: consumer.key
           ))
         end
 
@@ -55,12 +54,12 @@ module OmniAuth
       # additional calls (if the user id is returned with the token
       # or as a URI parameter). This may not be possible with all
       # providers.
-      uid{ raw_info["sub"] }
+      uid { raw_info['sub'] }
 
       info do
         {
-          :name => raw_info["username"],
-          :urls => {"server" => raw_info["iss"]}
+          name: raw_info['username'],
+          urls: { 'server' => raw_info['iss'] }
         }
       end
 
@@ -93,12 +92,12 @@ module OmniAuth
       end
 
       def authorize_url_parameters
-        params = { :title => consumer.options[:authorize_path_title] }
+        params = { title: consumer.options[:authorize_path_title] }
 
         if consumer.options[:signup]
           params.merge!(
-            :title => 'Special:UserLogin',
-            :type => 'signup'
+            title: 'Special:UserLogin',
+            type: 'signup'
           )
         end
 
@@ -107,20 +106,24 @@ module OmniAuth
         # a returntoquery parameter, unless the user goes directly to
         # Special:OAuth/authorize
         if params[:title] == 'Special:OAuth/authorize'
-          params.merge!(:oauth_consumer_key => consumer.key)
+          params.merge!(oauth_consumer_key: consumer.key)
         else
           params.merge!(
-            :returnto => 'Special:OAuth/authorize',
-            :returntoquery => "oauth_consumer_key=#{consumer.key}"
+            returnto: 'Special:OAuth/authorize',
+            returntoquery: "oauth_consumer_key=#{consumer.key}"
           )
         end
       end
 
       def parse_info(jwt_data)
         ident = jwt_data.body
-        payload, header = JWT.decode(ident, consumer.secret)
+        payload, _header = JWT.decode(ident, consumer.secret)
 
         payload
+      rescue JWT::DecodeError
+        fail!(:login_error)
+        return { login_failed: true,
+                 jwt_data: jwt_data.body }
       end
     end
   end
