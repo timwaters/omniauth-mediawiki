@@ -33,6 +33,7 @@ module OmniAuth
       info do
         {
           :name => raw_info["username"],
+          :email => raw_info["email"],
           :urls => {"server" => raw_info["iss"]}
         }
       end
