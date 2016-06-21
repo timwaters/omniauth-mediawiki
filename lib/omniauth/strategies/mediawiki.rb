@@ -20,33 +20,8 @@ module OmniAuth
         :site => site,
         :authorize_path => '/wiki/Special:Oauth/authorize',
         :access_token_path => '/w/index.php?title=Special:OAuth/token',
-        :request_token_path => '/w/index.php?title=Special:OAuth/initiate',
-        :oauth_callback=> "oob"
+        :request_token_path => '/w/index.php?title=Special:OAuth/initiate'
       }
-
-      def request_phase
-        request_token = consumer.get_request_token(:oauth_callback => callback_url)
-        session['oauth'] ||= {}
-        session['oauth'][name.to_s] = {'callback_confirmed' => request_token.callback_confirmed?, 'request_token' => request_token.token, 'request_secret' => request_token.secret}
-        r = Rack::Response.new
-
-        if request_token.callback_confirmed?
-          r.redirect(request_token.authorize_url(
-                       :oauth_consumer_key => consumer.key
-          ))
-        else
-          r.redirect(request_token.authorize_url(
-                       :oauth_callback => callback_url,
-                       :oauth_consumer_key => consumer.key
-          ))
-        end
-
-        r.finish
-      end
-
-      def callback_url
-        'oob'
-      end
 
       # These are called after authentication has succeeded. If
       # possible, you should try to set the UID without making
