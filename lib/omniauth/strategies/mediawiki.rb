@@ -40,7 +40,7 @@ module OmniAuth
 
       extra do
         {
-          'raw_info' => raw_info
+          'raw_info' => 'nil'
         }
       end
 
