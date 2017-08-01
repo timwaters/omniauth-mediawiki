@@ -26,11 +26,15 @@ module OmniAuth
 
       def request_phase
         request_token = consumer.get_request_token(oauth_callback: callback_url)
+
+        raise RequestTokenError unless valid_request_token?(request_token)
+
         session['oauth'] ||= {}
         session['oauth']['mediawiki'] = {
           'callback_confirmed' => request_token.callback_confirmed?,
           'request_token' => request_token.token,
           'request_secret' => request_token.secret }
+
         r = Rack::Response.new
 
         if request_token.callback_confirmed?
@@ -41,9 +45,14 @@ module OmniAuth
                        oauth_consumer_key: consumer.key
           ))
         end
-
         r.finish
+      rescue RequestTokenError => e
+        puts "There was a problem in getting the token from Mediawiki, here's what Mediawiki returned:"
+        puts request_token.inspect
+        raise e
       end
+
+      class RequestTokenError < StandardError; end
 
       def callback_url
         'oob'
@@ -113,6 +122,10 @@ module OmniAuth
             returntoquery: "oauth_consumer_key=#{consumer.key}"
           )
         end
+      end
+
+      def valid_request_token?(request_token)
+        request_token.token && request_token.secret
       end
 
       def parse_info(jwt_data)
