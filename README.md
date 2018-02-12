@@ -1,6 +1,8 @@
 # OmniAuth Mediawiki
 
 
+[![Gem Version](https://badge.fury.io/rb/omniauth-mediawiki.svg)](https://badge.fury.io/rb/omniauth-mediawiki)
+
 This gem contains the MediaWiki strategy for OmniAuth.
 
 MediaWiki uses the OAuth 1.0a extension, you can read about it here: https://www.mediawiki.org/wiki/Extension:OAuth
