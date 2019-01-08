@@ -1,3 +1,6 @@
+0.0.4
+bumped jwt version to 2 from 1
+
 0.0.3 
 Added email to raw_info
 Simplify mediawiki authentication code
