@@ -133,9 +133,10 @@ module OmniAuth
         payload, _header = JWT.decode(ident, consumer.secret)
 
         payload
-      rescue JWT::DecodeError
+      rescue JWT::DecodeError => e
         fail!(:login_error)
         return { login_failed: true,
+                 error: e,
                  jwt_data: jwt_data.body }
       end
     end
