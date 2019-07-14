@@ -12,8 +12,6 @@ Gem::Specification.new do |gem|
   gem.summary     = %q{Mediawiki strategy for OmniAuth 1.0a for wikipedia.org, commons.wikimedia.org etc where the wiki has the OAuth extension installed}
   gem.license     = 'MIT'
 
-  gem.rubyforge_project = "omniauth-mediawiki"
-
   gem.files       = `git ls-files`.split("\n")
   gem.test_files  = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.executables = `git ls-files -- bin/*`.split("\n").map{|f| File.basename(f)}
