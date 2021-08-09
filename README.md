@@ -36,7 +36,7 @@ config.omniauth :mediawiki, CONSUMER_KEY, CONSUMER_SECRET,
                 client_options: {:site => 'https://commons.wikimedia.org' }
 ```
 
-You can also use the `signup` option to configure it to direct users to the MediaWiki account creation page:
+You can also use the `signup` option to configure it to direct users to the MediaWiki account creation page. Use `signup_params` to optionally add parameters to the account creation URL.
 
 ```ruby
 config.omniauth :mediawiki_signup, CONSUMER_KEY, CONSUMER_SECRET,
@@ -44,7 +44,8 @@ config.omniauth :mediawiki_signup, CONSUMER_KEY, CONSUMER_SECRET,
                 strategy_class: OmniAuth::Strategies::Mediawiki,
                 client_options: {
                   site: 'https://en.wikipedia.org',
-                  signup: true
+                  signup: true,
+                  signup_params: { geEnabled: 1, geForceVariant: 'control' }
                 }
 ```
 

@@ -110,6 +110,12 @@ module OmniAuth
           )
         end
 
+        # The consumer can be configured to add a parameter to the
+        # signup URL, for example, geEnabled=0 to disable Growth features.
+        if consumer.options[:signup_params]
+          params.merge!(consumer.options[:signup_params])
+        end
+
         # To preserve the oauth keys and redirect the user to authorization
         # after account creation, the oauth parameters must be put into
         # a returntoquery parameter, unless the user goes directly to
